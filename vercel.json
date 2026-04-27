@@ -5,6 +5,5 @@
       "maxDuration": 60,
       "memory": 1024
     }
-  },
-  "_dependencies_note": "Environment variables must be configured in Vercel Dashboard. See VERCEL_ENV_SETUP.md for details."
+  }
 }
