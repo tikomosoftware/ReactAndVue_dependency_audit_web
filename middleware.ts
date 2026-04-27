@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getRateLimiter } from './lib/rate-limit';
 
 /**
- * Next.js Middleware。
+ * Next.js Middleware
  * /api/audit パスへのリクエストに対してレート制限を適用する。
  *
- * - IP アドレスを x-forwarded-for ヘッダーまたは NextRequest.ip から取得
+ * - IP アドレスを x-forwarded-for ヘッダーから取得
  * - レート制限超過時: 429 + エラーメッセージ + X-RateLimit-* ヘッダー
  * - 制限内: リクエスト転送 + X-RateLimit-Remaining / X-RateLimit-Reset ヘッダー付与
  * - Upstash 未設定時: レート制限をスキップしてリクエスト転送
@@ -18,9 +18,9 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     return NextResponse.next();
   }
 
-  // IP アドレスを取得（x-forwarded-for ヘッダー優先、フォールバックとして NextRequest.ip）
+  // IP アドレスを取得（x-forwarded-for ヘッダー優先、フォールバックとして '127.0.0.1'）
   const forwardedFor = request.headers.get('x-forwarded-for');
-  const ip = forwardedFor?.split(',')[0]?.trim() || request.ip || '127.0.0.1';
+  const ip = forwardedFor?.split(',')[0]?.trim() || '127.0.0.1';
 
   try {
     const { success, remaining, reset } = await limiter.limit(ip);
