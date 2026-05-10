@@ -50,32 +50,29 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main style={{ minHeight: '100vh', backgroundColor: 'var(--background)', display: 'flex', flexDirection: 'column' }}>
       {/* ヘッダー */}
-      <header className="border-b border-gray-200 bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-6">
+      <header className="site-header">
+        <div className="site-header-inner">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="brand-name">
               🔍 Web Dependency Audit
             </h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="brand-sub">
               package.json と lockfile をアップロードして、依存パッケージの監査を実行します
             </p>
           </div>
-          <Link
-            href="/about"
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-          >
+          <Link href="/about" className="nav-link-inactive">
             About
           </Link>
         </div>
       </header>
 
       {/* メインコンテンツ */}
-      <div className="mx-auto max-w-5xl px-4 py-8">
+      <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '32px 20px' }}>
         {/* レート制限残り回数の表示 */}
         {rateLimitRemaining !== null && (
-          <div className="mb-4 text-right text-xs text-gray-400">
+          <div style={{ marginBottom: '16px', textAlign: 'right', fontSize: '0.75rem', color: 'var(--muted)' }}>
             残りリクエスト回数: {rateLimitRemaining}
           </div>
         )}
@@ -91,15 +88,15 @@ export default function HomePage() {
 
         {/* loading フェーズ */}
         {appState.phase === 'loading' && (
-          <div className="flex flex-col items-center justify-center py-24">
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '96px 0' }}>
             <svg
-              className="h-10 w-10 animate-spin text-blue-600"
+              style={{ width: '40px', height: '40px', color: 'var(--accent)', animation: 'spin 1s linear infinite' }}
               viewBox="0 0 24 24"
               fill="none"
               aria-hidden="true"
             >
               <circle
-                className="opacity-25"
+                style={{ opacity: 0.25 }}
                 cx="12"
                 cy="12"
                 r="10"
@@ -107,12 +104,12 @@ export default function HomePage() {
                 strokeWidth="4"
               />
               <path
-                className="opacity-75"
+                style={{ opacity: 0.75 }}
                 fill="currentColor"
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
               />
             </svg>
-            <p className="mt-4 text-sm text-gray-600">
+            <p style={{ marginTop: '16px', fontSize: '0.875rem', color: 'var(--muted)' }}>
               監査を実行中です。しばらくお待ちください...
             </p>
           </div>
@@ -123,19 +120,20 @@ export default function HomePage() {
           <div>
             {/* 警告バナー */}
             {warnings.length > 0 && (
-              <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-4">
-                <p className="mb-1 text-sm font-medium text-amber-800">⚠️ 注意</p>
+              <div className="notice-box" style={{ marginBottom: '16px' }}>
+                <p style={{ marginBottom: '4px', fontSize: '0.875rem', fontWeight: 600 }}>⚠️ 注意</p>
                 {warnings.map((warning, i) => (
-                  <p key={i} className="text-sm text-amber-700">{warning}</p>
+                  <p key={i} style={{ fontSize: '0.875rem' }}>{warning}</p>
                 ))}
               </div>
             )}
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">監査結果</h2>
+            <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text)' }}>監査結果</h2>
               <button
                 type="button"
                 onClick={handleRetry}
-                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                className="btn-secondary"
+                style={{ padding: '8px 16px', fontSize: '0.875rem' }}
               >
                 新しい監査を実行
               </button>
@@ -146,22 +144,30 @@ export default function HomePage() {
 
         {/* error フェーズ */}
         {appState.phase === 'error' && (
-          <div className="mx-auto max-w-2xl rounded-xl border border-red-200 bg-red-50 p-8 text-center">
-            <div className="mb-4 text-4xl">⚠️</div>
-            <h2 className="mb-2 text-lg font-semibold text-red-800">
+          <div className="error-panel" style={{ maxWidth: '640px', margin: '0 auto', padding: '32px 24px', textAlign: 'center' }}>
+            <div style={{ marginBottom: '16px', fontSize: '2.5rem' }}>⚠️</div>
+            <h2 style={{ marginBottom: '8px', fontSize: '1.125rem', fontWeight: 600, color: 'var(--danger)' }}>
               エラーが発生しました
             </h2>
-            <p className="mb-6 text-sm text-red-600">{appState.message}</p>
+            <p style={{ marginBottom: '24px', fontSize: '0.875rem', color: 'var(--muted)' }}>{appState.message}</p>
             <button
               type="button"
               onClick={handleRetry}
-              className="rounded-lg bg-red-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-700"
+              className="btn-danger"
+              style={{ padding: '10px 24px', fontSize: '0.875rem' }}
             >
               もう一度試す
             </button>
           </div>
         )}
       </div>
+
+      {/* Footer */}
+      <footer className="site-footer">
+        <div className="site-footer-inner">
+          <p>&copy; 2025 tikomo software / Powered by Next.js &amp; GitHub Advisory API &amp; Vercel</p>
+        </div>
+      </footer>
     </main>
   );
 }

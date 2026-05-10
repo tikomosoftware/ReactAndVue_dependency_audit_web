@@ -30,29 +30,35 @@ export default function Summary({ report }: SummaryProps) {
   });
 
   return (
-    <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-      <h2 className="mb-4 text-lg font-semibold text-gray-900">
+    <section className="summary-card" style={{ padding: '24px' }}>
+      <h2 style={{ marginBottom: '16px', fontSize: '1.125rem', fontWeight: 600, color: 'var(--text)' }}>
         📊 監査サマリー
       </h2>
 
-      <p className="mb-4 text-sm text-gray-600">
+      <p style={{ marginBottom: '16px', fontSize: '0.875rem', color: 'var(--muted)' }}>
         確認パッケージ総数:{' '}
-        <span className="font-bold text-gray-900">{totalPackages}</span> 件
+        <span style={{ fontWeight: 700, color: 'var(--text)' }}>{totalPackages}</span> 件
       </p>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
         {categoryCounts.map(({ category, emoji, label, count }) => (
           <div
             key={category}
-            className="flex flex-col items-center rounded-lg border border-gray-100 bg-gray-50 px-3 py-4"
+            className="category-card"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              padding: '16px 12px',
+            }}
           >
-            <span className="text-2xl" role="img" aria-label={label}>
+            <span style={{ fontSize: '1.5rem' }} role="img" aria-label={label}>
               {emoji}
             </span>
-            <span className="mt-1 text-2xl font-bold text-gray-900">
+            <span style={{ marginTop: '4px', fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent)' }}>
               {count}
             </span>
-            <span className="mt-0.5 text-center text-xs text-gray-500">
+            <span style={{ marginTop: '2px', textAlign: 'center', fontSize: '0.75rem', color: 'var(--muted)' }}>
               {label}
             </span>
           </div>

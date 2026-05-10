@@ -46,7 +46,7 @@ export default function AuditResults({ report }: AuditResultsProps) {
   }, [report]);
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6">
+    <div style={{ maxWidth: '896px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* サマリー */}
       <Summary report={report} />
 
@@ -68,14 +68,21 @@ export default function AuditResults({ report }: AuditResultsProps) {
       <FrameworkUpdates updates={report.frameworkUpdates} />
 
       {/* Markdown レポートダウンロードボタン */}
-      <div className="flex justify-center">
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
         <button
           type="button"
           onClick={handleDownloadMarkdown}
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
+          className="btn-secondary"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '10px 20px',
+            fontSize: '0.875rem',
+          }}
         >
           <svg
-            className="h-4 w-4"
+            style={{ width: '16px', height: '16px' }}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

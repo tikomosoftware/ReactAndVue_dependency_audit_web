@@ -19,33 +19,46 @@ export default function FrameworkUpdates({ updates }: FrameworkUpdatesProps) {
   }
 
   return (
-    <section className="rounded-xl border border-gray-200 bg-white shadow-sm">
-      <div className="px-6 py-4">
-        <div className="flex items-center gap-2">
-          <span className="text-xl" role="img" aria-label="Framework Updates">
+    <section className="category-section">
+      <div style={{ padding: '16px 24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '1.25rem' }} role="img" aria-label="Framework Updates">
             🔵
           </span>
-          <h3 className="text-base font-semibold text-gray-900">
+          <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text)' }}>
             Framework Updates
           </h3>
-          <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-sm font-medium text-gray-700">
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '2px 10px',
+              borderRadius: '9999px',
+              fontSize: '0.875rem',
+              fontWeight: 500,
+              background: 'var(--surface-soft)',
+              color: 'var(--muted)',
+              border: '1px solid var(--line)',
+            }}
+          >
             {updates.length}
           </span>
         </div>
       </div>
 
-      <div className="overflow-x-auto border-t border-gray-200">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-gray-50 text-xs uppercase text-gray-500">
+      <div className="table-wrap" style={{ borderTop: '1px solid var(--line)', borderRadius: 0 }}>
+        <table className="data-table">
+          <thead>
             <tr>
-              <th scope="col" className="px-6 py-3">フレームワーク</th>
-              <th scope="col" className="px-6 py-3">現在バージョン</th>
-              <th scope="col" className="px-6 py-3">最新バージョン</th>
-              <th scope="col" className="px-6 py-3">更新種別</th>
-              <th scope="col" className="px-6 py-3">リリースノート</th>
+              <th>フレームワーク</th>
+              <th>現在バージョン</th>
+              <th>最新バージョン</th>
+              <th>更新種別</th>
+              <th>リリースノート</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody>
             {updates.map((update) => (
               <FrameworkRow key={update.name} update={update} />
             ))}
@@ -67,37 +80,34 @@ function FrameworkRow({ update }: { update: FrameworkUpdateInfo }) {
   const updateType = getUpdateType(update);
 
   return (
-    <tr
-      className={`transition-colors ${
-        isMajor
-          ? 'bg-amber-50 hover:bg-amber-100'
-          : 'hover:bg-gray-50'
-      }`}
-    >
-      <td className="px-6 py-3 font-medium text-gray-900">{update.name}</td>
-      <td className="px-6 py-3 font-mono text-gray-600">
+    <tr className={isMajor ? 'fw-row-major' : ''}>
+      <td style={{ fontWeight: 500 }}>{update.name}</td>
+      <td style={{ fontFamily: 'monospace' }}>
         {update.currentVersion}
       </td>
-      <td className="px-6 py-3 font-mono text-gray-600">
+      <td style={{ fontFamily: 'monospace' }}>
         {update.latestVersion}
       </td>
-      <td className="px-6 py-3">
+      <td>
         <span
-          className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-            isMajor
-              ? 'bg-amber-200 text-amber-900'
-              : 'bg-green-100 text-green-800'
-          }`}
+          className={isMajor ? 'badge-major' : 'badge-minor'}
+          style={{
+            display: 'inline-block',
+            padding: '2px 10px',
+            borderRadius: '9999px',
+            fontSize: '0.75rem',
+            fontWeight: 600,
+          }}
         >
           {updateType}
         </span>
       </td>
-      <td className="px-6 py-3">
+      <td>
         <a
           href={update.releaseNotesUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 hover:text-blue-800 hover:underline"
+          className="link-accent"
         >
           リリースノート ↗
         </a>

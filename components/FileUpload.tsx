@@ -44,7 +44,6 @@ export default function FileUpload({
   // ドロップゾーン内のイベントは React ハンドラーに任せる
   useEffect(() => {
     const handleDragOverGlobal = (e: globalThis.DragEvent) => {
-      // ドロップゾーン内は React ハンドラーに任せる
       if (dropZoneRef.current?.contains(e.target as Node)) return;
       e.preventDefault();
     };
@@ -209,9 +208,9 @@ export default function FileUpload({
   }, []);
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-gray-900">
+    <div style={{ maxWidth: '640px', margin: '0 auto' }}>
+      <div className="panel" style={{ padding: '24px' }}>
+        <h2 style={{ marginBottom: '16px', fontSize: '1.125rem', fontWeight: 600, color: 'var(--text)' }}>
           📦 依存パッケージ監査
         </h2>
 
@@ -221,27 +220,24 @@ export default function FileUpload({
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`mb-6 rounded-lg border-2 border-dashed p-8 text-center transition-colors ${
-            dragOver
-              ? 'border-blue-400 bg-blue-50'
-              : 'border-gray-300 bg-gray-50'
-          }`}
+          className={`drop-zone${dragOver ? ' drag-over' : ''}`}
+          style={{ marginBottom: '24px', padding: '32px', textAlign: 'center' }}
         >
-          <p className="mb-2 text-sm text-gray-600">
+          <p style={{ marginBottom: '8px', fontSize: '0.875rem', color: 'var(--muted)' }}>
             ファイルをここにドラッグ&ドロップ
           </p>
-          <p className="text-xs text-gray-400">
+          <p style={{ fontSize: '0.75rem', color: 'var(--muted)', opacity: 0.7 }}>
             package.json と lockfile（package-lock.json / yarn.lock）
           </p>
         </div>
 
         {/* package.json（必須） */}
-        <div className="mb-4">
+        <div style={{ marginBottom: '16px' }}>
           <label
             htmlFor="packageJson"
-            className="mb-1 block text-sm font-medium text-gray-700"
+            style={{ display: 'block', marginBottom: '4px', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text)' }}
           >
-            package.json <span className="text-red-500">*</span>
+            package.json <span style={{ color: 'var(--danger)' }}>*</span>
           </label>
           <input
             ref={packageJsonInputRef}
@@ -250,20 +246,27 @@ export default function FileUpload({
             accept=".json,application/json"
             onChange={handlePackageJsonChange}
             disabled={loading}
-            className="block w-full cursor-pointer text-sm text-gray-500 file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+            className="file-input"
+            style={{
+              display: 'block',
+              width: '100%',
+              fontSize: '0.875rem',
+              color: 'var(--muted)',
+              cursor: 'pointer',
+            }}
           />
           {packageJsonFile && (
-            <p className="mt-1 text-xs text-green-600">
+            <p style={{ marginTop: '4px', fontSize: '0.75rem', color: 'var(--success)' }}>
               ✓ {packageJsonFile.name}（{formatFileSize(packageJsonFile.size)}）
             </p>
           )}
         </div>
 
         {/* lockfile（任意） */}
-        <div className="mb-6">
+        <div style={{ marginBottom: '24px' }}>
           <label
             htmlFor="lockfile"
-            className="mb-1 block text-sm font-medium text-gray-700"
+            style={{ display: 'block', marginBottom: '4px', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text)' }}
           >
             lockfile（任意）
           </label>
@@ -274,35 +277,43 @@ export default function FileUpload({
             accept=".json,.lock,application/json,text/plain"
             onChange={handleLockfileChange}
             disabled={loading}
-            className="block w-full cursor-pointer text-sm text-gray-500 file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-gray-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-gray-700 hover:file:bg-gray-100 disabled:opacity-50"
+            className="file-input"
+            style={{
+              display: 'block',
+              width: '100%',
+              fontSize: '0.875rem',
+              color: 'var(--muted)',
+              cursor: 'pointer',
+            }}
           />
           {lockfile && (
-            <p className="mt-1 text-xs text-green-600">
+            <p style={{ marginTop: '4px', fontSize: '0.75rem', color: 'var(--success)' }}>
               ✓ {lockfile.name}（{formatFileSize(lockfile.size)}）
             </p>
           )}
-          <p className="mt-1 text-xs text-gray-400">
+          <p style={{ marginTop: '4px', fontSize: '0.75rem', color: 'var(--muted)', opacity: 0.7 }}>
             package-lock.json または yarn.lock
           </p>
         </div>
 
         {/* クライアントサイドエラー */}
         {clientError && (
-          <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
-            {clientError}
+          <div className="notice-box error" style={{ marginBottom: '16px' }}>
+            <p style={{ fontSize: '0.875rem' }}>{clientError}</p>
           </div>
         )}
 
         {/* アクションボタン */}
-        <div className="flex items-center gap-3">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <button
             type="button"
             onClick={handleSubmit}
             disabled={!packageJsonFile || loading}
-            className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500"
+            className="btn-primary"
+            style={{ padding: '10px 24px', fontSize: '0.875rem' }}
           >
             {loading ? (
-              <span className="flex items-center gap-2">
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <LoadingSpinner />
                 監査を実行中...
               </span>
@@ -315,7 +326,8 @@ export default function FileUpload({
             <button
               type="button"
               onClick={handleReset}
-              className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+              className="btn-secondary"
+              style={{ padding: '10px 16px', fontSize: '0.875rem' }}
             >
               リセット
             </button>
@@ -323,7 +335,7 @@ export default function FileUpload({
         </div>
 
         {/* プライバシーポリシー説明文 */}
-        <p className="mt-6 text-xs text-gray-400">
+        <p style={{ marginTop: '24px', fontSize: '0.75rem', color: 'var(--muted)', opacity: 0.8 }}>
           🔒 アップロードされたファイルはサーバーに保存されません。監査処理完了後、メモリ上のデータは即座に破棄されます。
         </p>
       </div>
@@ -335,13 +347,13 @@ export default function FileUpload({
 function LoadingSpinner() {
   return (
     <svg
-      className="h-4 w-4 animate-spin"
+      style={{ width: '16px', height: '16px', animation: 'spin 1s linear infinite' }}
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"
     >
       <circle
-        className="opacity-25"
+        style={{ opacity: 0.25 }}
         cx="12"
         cy="12"
         r="10"
@@ -349,7 +361,7 @@ function LoadingSpinner() {
         strokeWidth="4"
       />
       <path
-        className="opacity-75"
+        style={{ opacity: 0.75 }}
         fill="currentColor"
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
       />

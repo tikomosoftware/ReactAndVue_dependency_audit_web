@@ -28,45 +28,45 @@ export default function CategorySection({
 
   if (results.length === 0) {
     return (
-      <section className="rounded-xl border border-gray-200 bg-white shadow-sm">
-        <div className="flex items-center gap-2 px-6 py-4">
-          <span className="text-xl" role="img" aria-label={label}>
+      <section className="category-section">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '16px 24px' }}>
+          <span style={{ fontSize: '1.25rem' }} role="img" aria-label={label}>
             {emoji}
           </span>
-          <h3 className="text-base font-semibold text-gray-900">{label}</h3>
-          <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-sm font-medium text-gray-700">
-            0
-          </span>
+          <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text)' }}>{label}</h3>
+          <span className="category-count-badge">0</span>
         </div>
-        <div className="border-t border-gray-200 px-6 py-4">
-          <p className="text-sm text-gray-400">該当なし</p>
+        <div style={{ borderTop: '1px solid var(--line)', padding: '16px 24px' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--muted)' }}>該当なし</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="rounded-xl border border-gray-200 bg-white shadow-sm">
+    <section className="category-section">
       {/* カテゴリヘッダー（折りたたみトグル） */}
       <button
         type="button"
         onClick={() => setIsExpanded((prev) => !prev)}
-        className="flex w-full items-center justify-between px-6 py-4 text-left hover:bg-gray-50 transition-colors"
+        className="category-header-btn"
         aria-expanded={isExpanded}
       >
-        <div className="flex items-center gap-2">
-          <span className="text-xl" role="img" aria-label={label}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '1.25rem' }} role="img" aria-label={label}>
             {emoji}
           </span>
-          <h3 className="text-base font-semibold text-gray-900">{label}</h3>
-          <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-sm font-medium text-gray-700">
-            {results.length}
-          </span>
+          <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text)' }}>{label}</h3>
+          <span className="category-count-badge">{results.length}</span>
         </div>
         <svg
-          className={`h-5 w-5 text-gray-400 transition-transform ${
-            isExpanded ? 'rotate-180' : ''
-          }`}
+          style={{
+            width: '20px',
+            height: '20px',
+            color: 'var(--muted)',
+            transition: 'transform 0.2s',
+            transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+          }}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -83,25 +83,25 @@ export default function CategorySection({
 
       {/* パッケージ一覧テーブル */}
       {isExpanded && (
-        <div className="overflow-x-auto border-t border-gray-200">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-gray-50 text-xs uppercase text-gray-500">
+        <div className="table-wrap" style={{ borderTop: '1px solid var(--line)', borderRadius: 0 }}>
+          <table className="data-table">
+            <thead>
               <tr>
-                <th scope="col" className="px-6 py-3">パッケージ名</th>
-                <th scope="col" className="px-6 py-3">現在バージョン</th>
+                <th>パッケージ名</th>
+                <th>現在バージョン</th>
                 {category !== AuditCategory.UpToDate && (
-                  <th scope="col" className="px-6 py-3">最新バージョン</th>
+                  <th>最新バージョン</th>
                 )}
                 {isCritical && (
                   <>
-                    <th scope="col" className="px-6 py-3">深刻度</th>
-                    <th scope="col" className="px-6 py-3">CVSS</th>
-                    <th scope="col" className="px-6 py-3">脆弱性概要</th>
+                    <th>深刻度</th>
+                    <th>CVSS</th>
+                    <th>脆弱性概要</th>
                   </>
                 )}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody>
               {results.map((result) => (
                 <CategoryRow
                   key={result.package.name}
@@ -118,19 +118,19 @@ export default function CategorySection({
   );
 }
 
-/** 深刻度に応じたバッジカラー */
+/** 深刻度に応じたバッジクラス */
 function severityBadgeClass(severity: string): string {
   switch (severity) {
     case 'critical':
-      return 'bg-red-100 text-red-800';
+      return 'badge-critical';
     case 'high':
-      return 'bg-orange-100 text-orange-800';
+      return 'badge-high';
     case 'medium':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'badge-medium';
     case 'low':
-      return 'bg-blue-100 text-blue-800';
+      return 'badge-low';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'badge-default';
   }
 }
 
@@ -151,46 +151,52 @@ function CategoryRow({
       : null;
 
   return (
-    <tr className="hover:bg-gray-50 transition-colors">
-      <td className="px-6 py-3 font-medium text-gray-900">
+    <tr>
+      <td style={{ fontWeight: 500 }}>
         {result.package.name}
       </td>
-      <td className="px-6 py-3 font-mono text-gray-600">
+      <td style={{ fontFamily: 'monospace' }}>
         {result.versionInfo.currentVersion}
       </td>
       {category !== AuditCategory.UpToDate && (
-        <td className="px-6 py-3 font-mono text-gray-600">
+        <td style={{ fontFamily: 'monospace' }}>
           {result.versionInfo.latestVersion ?? '—'}
         </td>
       )}
       {isCritical && (
         <>
-          <td className="px-6 py-3">
+          <td>
             {topVuln ? (
               <span
-                className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${severityBadgeClass(
-                  topVuln.severity,
-                )}`}
+                className={severityBadgeClass(topVuln.severity)}
+                style={{
+                  display: 'inline-block',
+                  padding: '2px 8px',
+                  borderRadius: '4px',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                }}
               >
                 {topVuln.severity}
               </span>
             ) : (
-              <span className="text-gray-400">—</span>
+              <span style={{ color: 'var(--muted)' }}>—</span>
             )}
           </td>
-          <td className="px-6 py-3 font-mono text-gray-600">
+          <td style={{ fontFamily: 'monospace' }}>
             {topVuln?.cvssScore != null ? topVuln.cvssScore.toFixed(1) : '—'}
           </td>
-          <td className="px-6 py-3 text-gray-600">
+          <td>
             {topVuln ? (
               <div>
-                <p className="text-sm leading-relaxed">{topVuln.summary}</p>
+                <p style={{ fontSize: '0.875rem', lineHeight: 1.5 }}>{topVuln.summary}</p>
                 {topVuln.url && (
                   <a
                     href={topVuln.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-1 inline-block text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                    className="link-accent"
+                    style={{ marginTop: '4px', display: 'inline-block', fontSize: '0.75rem' }}
                   >
                     {topVuln.ghsaId || '詳細'} ↗
                   </a>
